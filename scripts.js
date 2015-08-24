@@ -276,7 +276,7 @@ r.buyIn( 1000 );
  * two players : red and black (20 pieces each)
  * 10X10 board
  * ask for player's input: cords of the piece and cords to move to
- * 
+ *
  *
  *
  */
@@ -296,32 +296,61 @@ function Checker() {
       if (gameBoard.victory()) {
         victoryMsg();
         break;
-      } 
+      }
       swapPlayers();
     }
   }
 }
 
-function Player( color ) {
-  this.piecesRemain = 20,
+function Player() {
+  // get input
+  // validate input
 }
 
 // board top-left: [0, 0], bottom-right: [9, 9]
 
-function Board ( ) {
-  this.gameBoard = 10 X 10 array;
+function Board () {
+  // create pieces
+  // render board
+  // move pieces
+  // track victory
+
+  // Initialize gameboard
+  this.gameBoard = [],
+
+  this.initializeGameBoard = function() {
+    for (var i = 0; i < 10; i++) {
+      this.gameBoard.push([]);
+      for (var j = 0; j < 10; j++) {
+        this.gameBoard[i].push([]);
+      };
+    };
+
+    // Black pieces
+    for (var i = 0; i < 4; i++) {
+      for (var j = 0; j < 10; j++) {
+        if (i % 2 === 0 && j % 2 != 0) || (i % 2 != 0 && j % 2 === 0) {
+          new Piece("black", [i, j])
+        }
+      }
+    }
+  },
+
+  this.render = function(){
+    for (var i = 0; i < 10; i++) {
+      console.log(this.gameBoard[i]);
+    };
+  };
+};
+
+function Piece ( color, coords ) {
+  // player
+  // color
+  // coords
+
+  this.color = color;
+  this.coords = coords;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
