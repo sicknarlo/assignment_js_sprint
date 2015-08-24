@@ -272,6 +272,60 @@ r.buyIn( 1000 );
 // You now have $1390
 
 
+/* 3 classes: Checker (game flow), Player (player input), Board ()
+ * two players : red and black (20 pieces each)
+ * 10X10 board
+ * ask for player's input: cords of the piece and cords to move to
+ * 
+ *
+ *
+ */
+
+
+function Checker() {
+  this.boardSize = 10,
+  this.numOfPlayers = 2,
+  this.play = function() {
+    var player1 = new Player( "red" );
+    var player2 = new Player( "black" );
+    var gameBoard = new Board();
+    var currentPlayer = player1;
+    while(true) {
+
+      currentPlayer.getInput(gameBoard);
+      if (gameBoard.victory()) {
+        victoryMsg();
+        break;
+      } 
+      swapPlayers();
+    }
+  }
+}
+
+function Player( color ) {
+  this.piecesRemain = 20,
+}
+
+// board top-left: [0, 0], bottom-right: [9, 9]
+
+function Board ( ) {
+  this.gameBoard = 10 X 10 array;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
