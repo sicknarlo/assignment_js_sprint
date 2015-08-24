@@ -175,9 +175,9 @@ function merge(left, right)
 //     };
 //   };
 //   if (p1 === arr1.length) {
-//     new_arr.concat(arr2.slice(p2, arr2.length));
+//     new_arr.concat(arr2.slice(p2));
 //   } else {
-//     new_arr.concat(arr1.slice(p1, arr1.length));
+//     new_arr.concat(arr1.slice(p1));
 //   };
 //   return new_arr;
 // }
@@ -210,6 +210,43 @@ var partition = function(arr, lo, hi) {
   arr[hi] = swap;
   return i;
 }
+
+
+function Roulette( total ) {
+  this.total = total,
+  this.bankroll = function() {
+    console.log("You now have $" + this.total);
+  },
+  this.spin = function(bet, number) {
+    var output = Math.floor(Math.random() * 36) + 1;
+    if (number === output) {
+      this.total += bet * 34;
+      console.log("You win $" + bet*35 + ", the spin was " + output + "!!!");
+      this.bankroll();
+    } else {
+      this.total -= bet;
+      console.log(this);
+      console.log("You Lose, the spin was " + output + "!!!");
+      this.bankroll();
+    };
+  },
+  this.buyIn = function( amount ) {
+    this.total += amount;
+  }
+};
+
+r = new Roulette( 100 );  // starting bankroll $100
+r.spin( 10, 24 );         // bet 10 on 24
+// You Win $350, the spin was 24!!!
+// You now have $440.
+r.spin( 50, 13 );
+// You Lose, the spin was 11 :(
+// You now have $390
+r.bankroll();
+// You now have $390
+r.buyIn( 1000 );
+// You bought in $1000
+// You now have $1390
 
 
 
