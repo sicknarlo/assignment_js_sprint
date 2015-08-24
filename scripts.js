@@ -143,7 +143,7 @@ var mergeSort = function(arr) {
 function merge(left, right)
 {
     var result = [];
- 
+
     while (left.length && right.length) {
         if (left[0] <= right[0]) {
             result.push(left.shift());
@@ -151,13 +151,13 @@ function merge(left, right)
             result.push(right.shift());
         }
     }
- 
+
     while (left.length)
         result.push(left.shift());
- 
+
     while (right.length)
         result.push(right.shift());
- 
+
     return result;
 }
 
@@ -186,7 +186,30 @@ var arr = [9, 8, 7, 6, 5, 4, 3, 2, 1]
 
 
 
+var quickSort = function(arr, lo, hi) {
+  if (lo < hi) {
+    var p = partition(arr, lo, hi);
+    quickSort(arr, lo, p - 1);
+    quickSort(arr, p + 1, hi);
+  }
+}
 
+var partition = function(arr, lo, hi) {
+  var pivot = arr[hi];
+  var i = lo;
+  for (var j = lo; j <= (hi - 1);j++) {
+    if (arr[j] <= pivot) {
+      var swap = arr[j];
+      arr[j] = arr[i];
+      arr[i] = swap;
+      i++;
+    };
+  };
+  var swap = arr[i];
+  arr[i] = arr[hi];
+  arr[hi] = swap;
+  return i;
+}
 
 
 
