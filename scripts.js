@@ -126,40 +126,61 @@ var bubbleSort = function(arr) {
 
 var mergeSort = function(arr) {
   var l = arr.length;
-  console.log("length is " + l);
+  // console.log("length is " + l);
   if (l < 2) {
     return arr;
   } else {
     var left = mergeSort(arr.slice(0, Math.floor(l/2)));
-    var right = mergeSort(arr.slice(Math.floor(l/2)+1, l));
-    console.log("LEFT");
-    console.log(left);
-    console.log("RIGHT");
-    console.log(right);
+    var right = mergeSort(arr.slice(Math.floor(l/2), l));
+    // console.log("LEFT");
+    // console.log(left);
+    // console.log("RIGHT");
+    // console.log(right);
     return merge(left, right);
   };
 };
 
-var merge = function(arr1, arr2) {
-  var p1 = 0;
-  var p2 = 0;
-  var new_arr = [];
-  while (p1 < arr1.length && p2 < arr2.length) {
-    if (arr1[p1] < arr2[p2]) {
-      new_arr.push(arr1[p1]);
-      p1 += 1;
-    } else {
-      new_arr.push(arr2[p2]);
-      p2 += 1;
-    };
-  };
-  if (p1 === arr1.length) {
-    new_arr.concat(arr2.slice(p2, arr2.length));
-  } else {
-    new_arr.concat(arr1.slice(p1, arr1.length));
-  };
-  return new_arr;
+function merge(left, right)
+{
+    var result = [];
+ 
+    while (left.length && right.length) {
+        if (left[0] <= right[0]) {
+            result.push(left.shift());
+        } else {
+            result.push(right.shift());
+        }
+    }
+ 
+    while (left.length)
+        result.push(left.shift());
+ 
+    while (right.length)
+        result.push(right.shift());
+ 
+    return result;
 }
+
+// var merge = function(arr1, arr2) {
+//   var p1 = 0;
+//   var p2 = 0;
+//   var new_arr = [];
+//   while (p1 < arr1.length && p2 < arr2.length) {
+//     if (arr1[p1] < arr2[p2]) {
+//       new_arr.push(arr1[p1]);
+//       p1 += 1;
+//     } else {
+//       new_arr.push(arr2[p2]);
+//       p2 += 1;
+//     };
+//   };
+//   if (p1 === arr1.length) {
+//     new_arr.concat(arr2.slice(p2, arr2.length));
+//   } else {
+//     new_arr.concat(arr1.slice(p1, arr1.length));
+//   };
+//   return new_arr;
+// }
 
 var arr = [9, 8, 7, 6, 5, 4, 3, 2, 1]
 
