@@ -218,11 +218,29 @@ function Roulette( total ) {
     console.log("You now have $" + this.total);
   },
   this.spin = function(bet, number) {
-    var output = Math.floor(Math.random() * 36) + 1;
-    if (number === output) {
-      this.total += bet * 34;
-      console.log("You win $" + bet*35 + ", the spin was " + output + "!!!");
-      this.bankroll();
+    var output = Math.floor(Math.random() * 38) + 1;
+    switch(output) {
+      case 37:
+        output = "0"
+        break;
+      case 38:
+        output = "00"
+        break;
+      default:
+        break;
+    };
+
+    if (number === "Odd" && output % 2 != 0)      ||
+       (number === "Even" && output % 2 === 0))   ||
+       ((number === "1 to 18")  && (output < 19)) ||
+       ((number === "19 to 36") && (output > 18 && output < 37)){
+      this.winAmount(1, output, bet);
+    } else if ((number === "1st 12")   && (output < 13))                ||
+              ((number === "19 to 36") && (output > 18 && output < 37)) ||
+    } else if ((number === "19 to 36") && (output > 18 && output < 37)) {
+      this.winAmount(2, output, bet);
+    } else if (number === output) {
+      this.winAmount(34, output, bet);
     } else {
       this.total -= bet;
       console.log(this);
@@ -232,6 +250,11 @@ function Roulette( total ) {
   },
   this.buyIn = function( amount ) {
     this.total += amount;
+  },
+  this.winAmount = function( odds, output, bet ) {
+    this.total += bet * odds;
+    console.log("You win $" + bet * (odds + 1) + ", the spin was " + output + "!!!");
+    this.bankroll();
   }
 };
 
