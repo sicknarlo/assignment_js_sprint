@@ -230,14 +230,14 @@ function Roulette( total ) {
         break;
     };
 
-    if (number === "Odd" && output % 2 != 0)      ||
-       (number === "Even" && output % 2 === 0))   ||
+    if ((number === "Odd" && output % 2 != 0)      ||
+       (number === "Even" && output % 2 === 0)   ||
        ((number === "1 to 18")  && (output < 19)) ||
-       ((number === "19 to 36") && (output > 18 && output < 37)){
+       ((number === "19 to 36") && (output > 18 && output < 37))) {
       this.winAmount(1, output, bet);
-    } else if ((number === "1st 12")   && (output < 13))                ||
-              ((number === "19 to 36") && (output > 18 && output < 37)) ||
-    } else if ((number === "19 to 36") && (output > 18 && output < 37)) {
+    } else if (((number === "1st 12")   && (output < 13))                ||
+              ((number === "2nd 12") && (output > 12 && output < 25))    ||
+              ((number === "3rd 12") && (output > 24 && output < 37))) {
       this.winAmount(2, output, bet);
     } else if (number === output) {
       this.winAmount(34, output, bet);
@@ -294,12 +294,21 @@ function Checker() {
 
       currentPlayer.getInput(gameBoard);
       if (gameBoard.victory()) {
-        victoryMsg();
+        this.victoryMsg(currentPlayer);
         break;
       }
-      swapPlayers();
+      this.swapPlayers();
     }
+  },
+
+  this.victoryMsg = function(player) {
+
+  },
+
+  this.swapPlayers = function() {
+
   }
+
 }
 
 function Player() {
@@ -317,40 +326,163 @@ function Board () {
 
   // Initialize gameboard
   this.gameBoard = [],
+  this.count = [0, 20, 20],
 
   this.initializeGameBoard = function() {
     for (var i = 0; i < 10; i++) {
       this.gameBoard.push([]);
       for (var j = 0; j < 10; j++) {
-        this.gameBoard[i].push([]);
+        this.gameBoard[i].push(0);
       };
     };
 
     // Black pieces
     for (var i = 0; i < 4; i++) {
       for (var j = 0; j < 10; j++) {
-        if (i % 2 === 0 && j % 2 != 0) || (i % 2 != 0 && j % 2 === 0) {
-          new Piece("black", [i, j])
-        }
-      }
-    }
+        if ((i % 2 === 0 && j % 2 != 0) || (i % 2 != 0 && j % 2 === 0)) {
+          this.gameBoard[i][j] = 1;
+        };
+      };
+    };
+
+    // Red pieces
+    for (var i = 6; i < 10; i++) {
+      for (var j = 0; j < 10; j++) {
+        if ((i % 2 === 0 && j % 2 != 0) || (i % 2 != 0 && j % 2 === 0)) {
+          this.gameBoard[i][j] = 2;
+        };
+      };
+    };
   },
 
   this.render = function(){
     for (var i = 0; i < 10; i++) {
       console.log(this.gameBoard[i]);
     };
-  };
+  },
+
+  // this.redCount = function() {
+  //   var count=0;
+  //   for (var i=0; i<10; i++) {
+  //     for (var j=0; j<10; j++) {
+  //       if (this.gameBoard[i][j] === 2) {
+  //         count += 1;
+  //       };
+  //     };
+  //   };
+  //   return count;
+  // },
+
+  // this.blackCount = function() {
+  //   var count=0;
+  //   for (var i=0; i<10; i++) {
+  //     for (var j=0; j<10; j++) {
+  //       if (this.gameBoard[i][j] === 1) {
+  //         count += 1;
+  //       };
+  //     };
+  //   };
+  //   return count;
+  // },
+
+  this.victory = function() {
+    if (this.count[0] === 0 || this.count[1] === 0) {
+      return true;
+    };
+    return false;
+  },
+
+  this.move = function(color, moveFrom, moveTo) {
+    if (this.gameBoard[moveFrom[0]][moveFrom[1]] === color) {
+      if (validMove(color, moveFrom, moveTo)) {
+        this.gameBoard[moveFrom[0]][moveFrom[1]] = 0;
+        this.gameBoard[moveTo[0]][moveTo[1]] = color;
+      };
+    };
+  },
+
+  this.validMove(color, moveFrom, moveTo) = function() {
+    if (color === 1) {
+      var opposite = 2;
+    } else if (color === 2) {
+      var opposite = 1;
+    };
+
+    if (this.gameBoard[moveTo[0]][moveTo[1]] != 0) {
+      return false;
+    };
+    if ((moveTo[0]%2===0 && moveTo[1]%2===0) || 
+        (moveTo[0]%2===1 && moveTo[1]%2===1)) {
+      return false;
+    };
+
+    // moveFrom = [x, y], the only coords to move to are
+    // [x-1, y-1], [x+1, y+1], [x-1, y+1], [x+1, y-1]
+    // except those out of the board
+    if (moveTo[0]<0 || moveTo[0]>9 || 
+        moveTo[1]<0 || moveTo[1]>9 ||
+        moveFrom[0]<0 || moveFrom[0]>9 ||
+        moveFrom[1]<0 || moveFrom[1]>9) {
+      return false;
+    };
+    
+    if (moveTo[0]===moveFrom[0]-1) {
+      if (moveTo[1]===moveFrom[1]-1 || moveTo[1]===moveFrom[1]+1) {
+        return true;
+      };
+    };
+
+    if (moveTo[0]===moveFrom[0]+1) {
+      if (moveTo[1]===moveFrom[1]-1 || moveTo[1]===moveFrom[1]+1) {
+        return true;
+      };
+    };
+    
+    // check jump over
+    if (moveTo[0]===moveFrom[0]-2) {
+      if (moveTo[1]===moveFrom[1]-2 && 
+          this.gameBoard[moveFrom[0]-1][moveFrom[1]-1]===opposite) {
+        this.gameBoard[moveFrom[0]-1][moveFrom[1]-1] = 0;
+        this.count[opposite] -= 1;
+        return true;
+      };
+
+      if (moveTo[1]===moveFrom[1]+2 && 
+          this.gameBoard[moveFrom[0]-1][moveFrom[1]+1]===opposite) {
+        this.gameBoard[moveFrom[0]-1][moveFrom[1]+1] = 0;
+        this.count[opposite] -= 1;
+        return true;
+      };
+    };
+
+    if (moveTo[0]===moveFrom[0]+2) {
+      if (moveTo[1]===moveFrom[1]-2 && 
+          this.gameBoard[moveFrom[0]+1][moveFrom[1]-1]===opposite) {
+        this.gameBoard[moveFrom[0]+1][moveFrom[1]-1] = 0;
+        this.count[opposite] -= 1;
+        return true;
+      };
+
+      if (moveTo[1]===moveFrom[1]+2 && 
+          this.gameBoard[moveFrom[0]+1][moveFrom[1]+1]===opposite) {
+        this.gameBoard[moveFrom[0]+1][moveFrom[1]+1] = 0;
+        this.count[opposite] -= 1;
+        return true;
+      };
+    };
+
+
+  }
 };
 
-function Piece ( color, coords ) {
-  // player
-  // color
-  // coords
+// function Piece ( color ) {
+//   // player
+//   // color
+//   // coords
 
-  this.color = color;
-  this.coords = coords;
-}
+//   this.color = color;
+//   this.coords = coords;
+// }
 
 
 
