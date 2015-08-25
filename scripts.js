@@ -292,7 +292,13 @@ function Checker() {
     var currentPlayer = player1;
     while(true) {
 
-      currentPlayer.getInput(gameBoard);
+      do {
+        var move = currentPlayer.getMove();
+      }
+      while (!gameBoard.validMove(currentPlayer.color, move[0], move[1]));
+
+      gameBoard.move(currentPlayer.color, move[0], move[1])
+
       if (gameBoard.victory()) {
         this.victoryMsg(currentPlayer);
         break;
@@ -311,9 +317,27 @@ function Checker() {
 
 }
 
-function Player() {
+function Player(color) {
   // get input
-  // validate input
+
+  if (color == "red") {
+    this.color = 2;
+  }
+  else
+  {
+    this.color = 1;
+  };
+
+  this.getMove = function() {
+    var move_from_x = parseInt(prompt("Enter the row of the piece you'd like to move")) - 1;
+    var move_from_y = parseInt(prompt("Enter the col of the piece you'd like to move")) - 1;
+
+    var move_to_x = parseInt(prompt("Enter the row of where you'd like to move")) - 1;
+    var move_to_y = parseInt(prompt("Enter the col of where you'd like to move")) - 1;
+
+    return [[move_from_x, move_from_y], [move_to_x, move_to_y]]
+  }
+
 }
 
 // board top-left: [0, 0], bottom-right: [9, 9]
@@ -401,7 +425,7 @@ function Board () {
     };
   },
 
-  this.validMove(color, moveFrom, moveTo) = function() {
+  this.validMove = function(color, moveFrom, moveTo) {
     if (color === 1) {
       var opposite = 2;
     } else if (color === 2) {
@@ -411,7 +435,7 @@ function Board () {
     if (this.gameBoard[moveTo[0]][moveTo[1]] != 0) {
       return false;
     };
-    if ((moveTo[0]%2===0 && moveTo[1]%2===0) || 
+    if ((moveTo[0]%2===0 && moveTo[1]%2===0) ||
         (moveTo[0]%2===1 && moveTo[1]%2===1)) {
       return false;
     };
@@ -419,13 +443,13 @@ function Board () {
     // moveFrom = [x, y], the only coords to move to are
     // [x-1, y-1], [x+1, y+1], [x-1, y+1], [x+1, y-1]
     // except those out of the board
-    if (moveTo[0]<0 || moveTo[0]>9 || 
+    if (moveTo[0]<0 || moveTo[0]>9 ||
         moveTo[1]<0 || moveTo[1]>9 ||
         moveFrom[0]<0 || moveFrom[0]>9 ||
         moveFrom[1]<0 || moveFrom[1]>9) {
       return false;
     };
-    
+
     if (moveTo[0]===moveFrom[0]-1) {
       if (moveTo[1]===moveFrom[1]-1 || moveTo[1]===moveFrom[1]+1) {
         return true;
@@ -437,17 +461,17 @@ function Board () {
         return true;
       };
     };
-    
+
     // check jump over
     if (moveTo[0]===moveFrom[0]-2) {
-      if (moveTo[1]===moveFrom[1]-2 && 
+      if (moveTo[1]===moveFrom[1]-2 &&
           this.gameBoard[moveFrom[0]-1][moveFrom[1]-1]===opposite) {
         this.gameBoard[moveFrom[0]-1][moveFrom[1]-1] = 0;
         this.count[opposite] -= 1;
         return true;
       };
 
-      if (moveTo[1]===moveFrom[1]+2 && 
+      if (moveTo[1]===moveFrom[1]+2 &&
           this.gameBoard[moveFrom[0]-1][moveFrom[1]+1]===opposite) {
         this.gameBoard[moveFrom[0]-1][moveFrom[1]+1] = 0;
         this.count[opposite] -= 1;
@@ -456,14 +480,14 @@ function Board () {
     };
 
     if (moveTo[0]===moveFrom[0]+2) {
-      if (moveTo[1]===moveFrom[1]-2 && 
+      if (moveTo[1]===moveFrom[1]-2 &&
           this.gameBoard[moveFrom[0]+1][moveFrom[1]-1]===opposite) {
         this.gameBoard[moveFrom[0]+1][moveFrom[1]-1] = 0;
         this.count[opposite] -= 1;
         return true;
       };
 
-      if (moveTo[1]===moveFrom[1]+2 && 
+      if (moveTo[1]===moveFrom[1]+2 &&
           this.gameBoard[moveFrom[0]+1][moveFrom[1]+1]===opposite) {
         this.gameBoard[moveFrom[0]+1][moveFrom[1]+1] = 0;
         this.count[opposite] -= 1;
